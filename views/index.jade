@@ -1,5 +1,32 @@
 extends layout
+block variables
+ - HOMEPAGE = true;
 
 block content
-  h1= title
-  p Welcome to #{title}
+  .row
+        .col-md-4
+          h2
+           i(class='glyphicon glyphicon-hdd') 
+           |   The Author
+          p
+            | Sarcasm 
+          p
+            a.btn.btn-default(href='#', role='button') Go ahead and click »
+        .col-md-4
+          h2 
+           i(class='glyphicon glyphicon-education') 
+           |   The Study
+          p
+            | Dedicated to all things ternary and the beauty of the code.  Click the link to find others who agree.
+          p
+            a.btn.btn-default(href='#', role='button') Show Me Please »
+        .col-md-4
+          h2 
+           i(class='glyphicon glyphicon-cog') 
+           |   The Blog
+          p
+            | Take this opportunity to blog yourself to happiness about ternary code.  Yes, delightful!
+          p
+            a.btn.btn-default(href='#', role='button') Blog Away »
+
+  
