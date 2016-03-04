@@ -11,8 +11,10 @@
     "debug": "~2.2.0",
     "express": "~4.13.1",
     "express4-handlebars": "^0.2.0",
+    "handlebars": "^4.0.5",
     "jade": "~1.11.0",
     "jade-bootstrap": "^1.0.2",
+    "mongoose": "^4.4.6",
     "morgan": "~1.6.1",
     "nodemailer": "^2.2.1",
     "serve-favicon": "~2.3.0"

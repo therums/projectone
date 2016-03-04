@@ -9,6 +9,9 @@ var routes = require('./routes/index');
 var ternary = require('./routes/ternary');
 var about = require('./routes/about');
 
+// var dbFunctions = require('../data/blog.js')
+var mongoose = require('mongoose')
+
 var app = express();
 app.enable('strict routing');
 // view engine setup
@@ -27,13 +30,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
-app.use('/ternary', ternary);
-app.use('/about', about);
 
-app.get('/about/', function(req, res) {
+app.use('/', routes);
+app.use('/about', about);
+app.use(express.static(path.join(__dirname, '/routes')))
+
+app.get('/about', function(req, res) {
   res.render('about.jade', {title: 'about'});
 });
+
+
 
 
 
