@@ -33,13 +33,26 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/about', about);
+app.use('/happines', about);
+app.use('/contact', about);
+app.use('/ternary', ternary);
 app.use(express.static(path.join(__dirname, '/routes')))
 
 app.get('/about', function(req, res) {
-  res.render('about.jade', {title: 'about'});
+  res.render('about.jade', {title: 'About'});
 });
 
+app.get('/happiness', function(req, res) {
+  res.render('happiness.jade', {title: 'Happiness'});
+});
 
+app.get('/contact', function(req, res) {
+  res.render('contact.jade', {title: 'Contact'});
+});
+
+app.get('/ternary', function(req, res) {
+  res.render('ternary.jade', {title: 'Ternary'});
+});
 
 
 
