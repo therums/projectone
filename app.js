@@ -98,11 +98,9 @@ app.use(function(err, req, res, next) {
 module.exports = app;
 
 // var dbFunctions = require('../data/blog.js')
-// view engine setup
+
 // app.engine('hbs', hbs.express4({
 //   defaultLayout: __dirname + '/views/layout'
 // }))
 // app.set('view engine', 'hbs')
 
-// uncomment after placing your favicon in /public
-// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
