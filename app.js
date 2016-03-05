@@ -64,6 +64,34 @@ app.get('/blog', function(req, res) {
   res.render('blog.jade', {title: 'Blog'});
 });
 
+app.get('/register', function(req, res) {
+  res.render('register.jade', {title: 'Register'});
+});
+
+app.post('/signin', function (req, resp) {
+  var userExists = false
+  var db = mongoose.connect.getUsers(db, function (err, users) {
+    var newEmail = req.body.email;
+    var userArray = Array.from(user) 
+      userArray.forEach(function(user) {
+        if (user.email === newEmail) {
+          userExists = true
+          db.disconnect(function() {
+            console.log('database closed after siginin')
+            resp.render('blog', {"user": user})
+          })
+        }
+      })
+      if (!userExists) {
+        console.log(req.body.email, "user doesn't exist yet")
+        db.disconnect(function() {
+          console.log('database closed')
+          resp.render('signin')
+        })
+      }
+  })
+})
+
 var dbFunctions = require('./data/blog.js')
 // checking if email exists in db already
 app.post('/register', function (req, res) {
@@ -91,7 +119,16 @@ app.post('/register', function (req, res) {
   }
 })
 
-
+app.get('/blog', function (req, res) {
+  var db = mongoose.connect('mongodb://localhost:27017/blog')
+    db.dbFunctions.getUsers(db, function(err, users) {
+      console.log(user)
+      res.render('blog', {users: users})
+      db.disconnect(function() {
+        console.log('database closed')
+      })
+    })
+})
 
 
 // catch 404 and forward to error handler
