@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose')
 
+
 var app = express();
 app.enable('strict routing');
 
@@ -63,6 +64,36 @@ app.get('/blog', function(req, res) {
   res.render('blog.jade', {title: 'Blog'});
 });
 
+var dbFunctions = require('./data/blog.js')
+// checking if email exists in db already
+app.post('/register', function (req, res) {
+  var userExists = false
+  var db = mongoose.connect('mongodb://localhost:27017/blog');
+  dbFunctions.getUsers(db, function (err, users) {
+    var newEmail = req.body.email;
+    var userArray = Array.from(users)
+      if(user.email === newEmail) {
+        console.log('Already exists in db', user)
+        res.render('./views/blog')
+        userExists = true
+      }
+  })
+  // saving new user to database
+  if (!userExists) {
+    console.log('trying to save user')
+    dbFunctions.saveUser(db, req.body, function(err, resp) {
+      console.log('SAVED', resp)
+      db.disconnect(function() {
+        res.render('blog', {"user": req.body})
+        console.log('database closed')
+      })
+    })
+  }
+})
+
+
+
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
@@ -97,7 +128,8 @@ app.use(function(err, req, res, next) {
 
 module.exports = app;
 
-// var dbFunctions = require('../data/blog.js')
+
+
 
 // app.engine('hbs', hbs.express4({
 //   defaultLayout: __dirname + '/views/layout'
