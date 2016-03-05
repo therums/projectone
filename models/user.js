@@ -1,10 +1,10 @@
-// schema for data
+// schema for data for users register and login
 
 var mongoose = require('mongoose');
 
 module.exports = mongoose.Schema({
-	title: String,
-	blog: String,
-	timeStamp: String,
-	img: String
+	firstName: String,
+	lastName: String,
+	email: String,
+	password: String,
 })
