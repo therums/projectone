@@ -122,14 +122,25 @@ app.post('/register', function (req, res) {
 app.get('/blog', function (req, res) {
   var db = mongoose.connect('mongodb://localhost:27017/blog')
     db.dbFunctions.getUsers(db, function(err, users) {
-      console.log(user)
+      console.log('blog being read', user)
       res.render('blog', {users: users})
       db.disconnect(function() {
         console.log('database closed')
       })
     })
 })
-
+// following a course video online
+// want to post blog data to the db from /blog page
+app.post('/blog', function (req, res) {
+  db.blog.insert(req.body, function (err, doc) {
+    if (err) {
+      res.send(err);
+    } else {
+      console.log('sending blog to database')
+      res.json(doc)
+    }
+  }) 
+})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
