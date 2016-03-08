@@ -1,6 +1,6 @@
 var express = require('express');
 var path = require('path');
-var favicon = require('serve-favicon');
+// var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
@@ -16,6 +16,7 @@ var about = require('./routes/about');
 var author = require('./routes/author');
 var study = require('./routes/study');
 var blog = require('./routes/blog');
+var signIn = require('./routes/signIn');
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -35,6 +36,7 @@ app.use('/ternary', ternary);
 app.use('/author', author);
 app.use('/study', study);
 app.use('/blog', blog);
+app.use('/signIn', signIn);
 
 app.get('/about', function(req, res) {
   res.render('about.jade', {title: 'About'});
@@ -68,25 +70,30 @@ app.get('/register', function(req, res) {
   res.render('register.jade', {title: 'Register'});
 });
 
-app.post('/signin', function (req, resp) {
+app.get('/signIn', function(req, res) {
+  res.render('signIn.jade', {title: 'Sign-in'});
+});
+
+app.post('/signIn', function (req, resp) {
   var userExists = false
-  var db = mongoose.connect.getUsers(db, function (err, users) {
+  var db = mongoose.connect('mongodb://localhost:27017/blog');
+  dbFunctions.getUsers(db, function (err, users) {
     var newEmail = req.body.email;
     var userArray = Array.from(user) 
       userArray.forEach(function(user) {
         if (user.email === newEmail) {
           userExists = true
           db.disconnect(function() {
-            console.log('database closed after siginin')
+            console.log('database closed after signing in')
             resp.render('blog', {"user": user})
           })
         }
       })
       if (!userExists) {
         console.log(req.body.email, "user doesn't exist yet")
-        db.disconnect(function() {
-          console.log('database closed')
-          resp.render('signin')
+          db.disconnect(function() {
+            console.log('database closed')
+            resp.render('signIn')
         })
       }
   })
@@ -94,7 +101,7 @@ app.post('/signin', function (req, resp) {
 
 var dbFunctions = require('./data/blog.js')
 // checking if email exists in db already
-app.post('/register', function (req, res) {
+app.post('/signIn', function (req, res) {
   var userExists = false
   var db = mongoose.connect('mongodb://localhost:27017/blog');
   dbFunctions.getUsers(db, function (err, users) {
@@ -118,8 +125,8 @@ app.post('/register', function (req, res) {
     })
   }
 })
-
-app.get('/blog', function (req, res) {
+// once signed in or registered then 
+app.get('/signIn', function (req, res) {
   var db = mongoose.connect('mongodb://localhost:27017/blog')
     db.dbFunctions.getUsers(db, function(err, users) {
       console.log('blog being read', user)
@@ -129,7 +136,7 @@ app.get('/blog', function (req, res) {
       })
     })
 })
-// following a course video online
+
 // want to post blog data to the db from /blog page
 app.post('/blog', function (req, res) {
   db.blog.insert(req.body, function (err, doc) {
