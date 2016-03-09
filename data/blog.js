@@ -1,30 +1,30 @@
 var mongoose = require('mongoose');
 
-var userSchema = require('../models/user');
+var userSchema = require('../models/blog');
 
-function getUsers(db, callback) {
-	console.log('Im alive')
-	var userModel = mongoose.model('User', userSchema)
+
+function writeToBlog(db, callback) {
+	console.log('written')
+	var userModel = mongoose.model('Blog', userSchema)
 	userModel.find(function (err, res) {
-		if (err) console.log('error occurred', err)
-			console.log('finished reading databse')
+		if (err) console.log('getUser error occurred', err)
+			console.log('reading databse')
 		callback(err, res)
 	})
 }
 
-function saveUser(db, userForDB, callback) {
-	console.log('started the save process')
-	var userModel = mongoose.model('User', userSchema)
-	userForDB = new userModel(userForDB)
-
+function saveBlog(db, userForDB, callback) {
+	console.log('save blog')
+	var userModel = mongoose.model('Blog', userSchema)
+	saveDB = new userModel(saveDB)
 	userForDB.save(function (err, res) {
 		if (err) 
-			return console.log('there is an error', err)
+			return console.log('save blog error', err)
 		callback(err, res)
 	})
 }
 
 module.exports = {
-	"getUsers": getUsers,
-	"saveUser": saveUser
+	"writeToBlog": writeToBlog,
+	"saveBlog": saveBlog
 }

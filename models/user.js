@@ -3,8 +3,6 @@
 var mongoose = require('mongoose');
 
 module.exports = mongoose.Schema({
-	firstName: String,
-	lastName: String,
 	email: String,
 	password: String,
 })

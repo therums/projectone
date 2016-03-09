@@ -1,11 +1,11 @@
 var express = require('express');
 var path = require('path');
-// var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose')
-
+// var db = require('../model/blog')
+// var blog = require('../model/blog')
 
 var app = express();
 app.enable('strict routing');
@@ -25,8 +25,9 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+// app.use(require('express-method-override')('method_override_param_name'));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, '/routes')))
+app.use(express.static(path.join(__dirname, '/routes')));
 
 app.use('/', routes);
 app.use('/about', about);
@@ -37,6 +38,7 @@ app.use('/author', author);
 app.use('/study', study);
 app.use('/blog', blog);
 app.use('/signIn', signIn);
+
 
 app.get('/about', function(req, res) {
   res.render('about.jade', {title: 'About'});
@@ -66,8 +68,9 @@ app.get('/blog', function(req, res) {
   res.render('blog.jade', {title: 'Blog'});
 });
 
-app.get('/register', function(req, res) {
-  res.render('register.jade', {title: 'Register'});
+app.get('/addBlog', function(req, res) {
+  res.render('addBlog.jade', {title: 'Add to the Blog'});
+  // res.redirect('/blog')
 });
 
 app.get('/signIn', function(req, res) {
@@ -75,6 +78,7 @@ app.get('/signIn', function(req, res) {
 });
 
 app.post('/signIn', function (req, resp) {
+  console.log('getting to the sign postrs')
   var userExists = false
   var db = mongoose.connect('mongodb://localhost:27017/blog');
   dbFunctions.getUsers(db, function (err, users) {
@@ -99,46 +103,58 @@ app.post('/signIn', function (req, resp) {
   })
 })
 
-var dbFunctions = require('./data/blog.js')
+
 // checking if email exists in db already
-app.post('/signIn', function (req, res) {
-  var userExists = false
-  var db = mongoose.connect('mongodb://localhost:27017/blog');
-  dbFunctions.getUsers(db, function (err, users) {
-    var newEmail = req.body.email;
-    var userArray = Array.from(users)
-      if(user.email === newEmail) {
-        console.log('Already exists in db', user)
-        res.render('./views/blog')
-        userExists = true
-      }
-  })
+// app.post('/signIn', function (req, res) {
+//   console.log('posting')
+//   var userExists = false
+//   var db = mongoose.connect('mongodb://localhost:27017/blog');
+//   dbFunctions.getUsers(db, function (err, users) {
+//     var newEmail = req.body.email;
+//     var userArray = Array.from(users)
+//       if(user.email === newEmail) {
+//         console.log('Already exists in db', user)
+//         res.render('./views/addBlog')
+//         userExists = true
+//       }
+//   })
   // saving new user to database
-  if (!userExists) {
-    console.log('trying to save user')
-    dbFunctions.saveUser(db, req.body, function(err, resp) {
-      console.log('SAVED', resp)
-      db.disconnect(function() {
-        res.render('blog', {"user": req.body})
-        console.log('database closed')
-      })
-    })
-  }
-})
+//   if (!userExists) {
+//     console.log('trying to save user')
+//     dbFunctions.saveUser(db, req.body, function(err, resp) {
+//       console.log('SAVED', resp)
+//       db.disconnect(function() {
+//         res.render('blog', {"user": req.body})
+//         console.log('database closed')
+//       })
+//     })
+//   }
+// })
 // once signed in or registered then 
-app.get('/signIn', function (req, res) {
-  var db = mongoose.connect('mongodb://localhost:27017/blog')
-    db.dbFunctions.getUsers(db, function(err, users) {
-      console.log('blog being read', user)
-      res.render('blog', {users: users})
-      db.disconnect(function() {
-        console.log('database closed')
-      })
-    })
-})
+// app.get('/signIn', function (req, res) {
+//   var db = mongoose.connect('mongodb://localhost:27017/blog')
+//     db.dbFunctions.getUsers(db, function(err, users) {
+//       console.log('blog being read', user)
+//       res.render('blog', {users: users})
+//       db.disconnect(function() {
+//         console.log('database closed')
+//       })
+//     })
+// })
+// app.get('/blog', function(req, res) {
+//   blog.findAll(function(err, docs) {
+//     res.render('blog.jade', { blog:
+//       title: 'title',
+//       words: 'words'
+//     })
+//   })
+// })
+
 
 // want to post blog data to the db from /blog page
-app.post('/blog', function (req, res) {
+app.post('/addBlog', function (req, res) {
+  console.log('trying to connect via addblog')
+  var dbFunctions = mongoose.connect('mongodb://localhost:27017/blog');
   db.blog.insert(req.body, function (err, doc) {
     if (err) {
       res.send(err);
@@ -148,7 +164,31 @@ app.post('/blog', function (req, res) {
     }
   }) 
 })
+// var mongoose = require('mongoose');
 
+// var userSchema = require('../models/blog');
+
+
+function writeToBlog(db, callback) {
+  console.log('written')
+  var userModel = mongoose.model('Blog', userSchema)
+  userModel.find(function (err, res) {
+    if (err) console.log('getUser error occurred', err)
+      console.log('reading databse')
+    callback(err, res)
+  })
+}
+
+function saveBlog(db, userForDB, callback) {
+  console.log('save blog')
+  var userModel = mongoose.model('Blog', userSchema)
+  saveDB = new userModel(saveDB)
+  userForDB.save(function (err, res) {
+    if (err) 
+      return console.log('save blog error', err)
+    callback(err, res)
+  })
+}
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
