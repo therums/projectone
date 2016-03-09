@@ -4,6 +4,4 @@ var mongoose = require('mongoose');
 module.exports = mongoose.Schema({
 	title: String,
 	words: String,
-	timeStamp: String,
-	img: String
 })
